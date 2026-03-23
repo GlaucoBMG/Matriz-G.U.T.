@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Matriz GUT">
+<title>Matriz GUT</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f13;
+    --surface: #16181f;
+    --surface2: #1e2029;
+    --border: #2a2d3a;
+    --accent: #e8ff47;
+    --accent2: #ff6b4a;
+    --accent3: #4aadff;
+    --text: #f0f0f0;
+    --muted: #6b7080;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* ===== DESKTOP ===== */
+  @media (min-width: 768px) {
+    body { display: flex; overflow: hidden; height: 100vh; }
+    .sidebar {
+      width: 280px; min-width: 280px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; height: 100vh; overflow-y: auto;
+    }
+    .sidebar-header { padding: 32px 24px 20px; border-bottom: 1px solid var(--border); }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; letter-spacing: -1px; color: var(--accent); margin-bottom: 4px; }
+    .logo span { color: var(--text); }
+    .subtitle { font-size: 12px; color: var(--muted); }
+    .sidebar-nav { padding: 16px 12px; border-bottom: 1px solid var(--border); }
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 14px; color: var(--muted); font-weight: 500;
+      transition: all 0.15s; border: none; background: none; width: 100%;
+      font-family: 'DM Sans', sans-serif; text-align: left;
+    }
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(232,255,71,0.08); color: var(--accent); }
+    .sidebar-sync { padding: 16px; margin-top: auto; border-top: 1px solid var(--border); }
+    .sync-btn-desk {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); padding: 10px 14px; border-radius: var(--radius-sm);
+      font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }
+    .sync-btn-desk.synced { color: var(--accent); border-color: rgba(232,255,71,0.3); }
+    .sync-btn-desk:hover { border-color: var(--accent); }
+    .main-content { flex: 1; overflow-y: auto; padding: 32px 40px; height: 100vh; }
+    .page-title {
+      font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+      margin-bottom: 24px; display: flex; align-items: center; gap: 12px;
+    }
+    .page-badge {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 50px; padding: 4px 12px; font-size: 12px; color: var(--muted); font-weight: 500;
+    }
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; }
+    .stat-val { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 2px; }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .add-card-desk { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; }
+    .col-header {
+      display: grid; grid-template-columns: 36px 1fr 90px 56px 32px 32px;
+      gap: 12px; padding: 0 18px 8px;
+      font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+    }
+    .task-card-desk {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 14px 18px; display: grid; grid-template-columns: 36px 1fr 90px 56px 32px 32px;
+      align-items: center; gap: 12px; position: relative; overflow: hidden; transition: border-color 0.2s; margin-bottom: 8px;
+    }
+    .task-card-desk:hover { border-color: var(--muted); }
+    .task-card-desk::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; }
+    .task-card-desk.priority-high::before { background: var(--accent2); }
+    .task-card-desk.priority-mid::before { background: var(--accent); }
+    .task-card-desk.priority-low::before { background: var(--accent3); }
+    .task-card-desk.completed .task-name-d { text-decoration: line-through; opacity: 0.4; }
+    .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    /* hide mobile elements */
+    .bottom-nav, .mobile-header, .mobile-tabs, .mobile-form, .mobile-list { display: none !important; }
+  }
+
+  /* ===== MOBILE ===== */
+  @media (max-width: 767px) {
+    body { max-width: 480px; margin: 0 auto; padding-bottom: 100px; }
+    .sidebar, .desk-only { display: none !important; }
+    .main-content { padding: 0; }
+    .guide-grid { display: block; }
+  }
+
+  /* ===== SHARED ===== */
+  .mobile-header {
+    padding: 52px 24px 24px;
+    background: linear-gradient(180deg, #12141a 0%, transparent 100%);
+    position: sticky; top: 0; z-index: 10; backdrop-filter: blur(12px);
+  }
+  .mobile-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .logo-mob { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; letter-spacing: -1px; color: var(--accent); }
+  .logo-mob span { color: var(--text); }
+  .sync-btn-mob {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+    padding: 8px 14px; border-radius: 50px; font-size: 12px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+  }
+  .sync-btn-mob.synced { color: var(--accent); border-color: var(--accent); }
+  .subtitle-mob { font-size: 13px; color: var(--muted); }
+  .mobile-tabs { display: flex; gap: 8px; padding: 0 24px 20px; overflow-x: auto; scrollbar-width: none; }
+  .mobile-tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    padding: 8px 18px; border-radius: 50px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; font-weight: 500;
+  }
+  .tab.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
+  .section { padding: 0 24px; }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-weight: 600; }
+  .add-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
+  .input-task {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; padding: 14px 16px;
+    outline: none; margin-bottom: 16px; transition: border-color 0.2s;
+  }
+  .input-task:focus { border-color: var(--accent); }
+  .input-task::placeholder { color: var(--muted); }
+  .gut-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .gut-col label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+  .gut-col.g label { color: var(--accent2); }
+  .gut-col.u label { color: var(--accent); }
+  .gut-col.t label { color: var(--accent3); }
+  .score-btns { display: flex; gap: 4px; }
+  .score-btn {
+    flex: 1; aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--muted); font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .score-btn:active { transform: scale(0.92); }
+  .gut-col.g .score-btn.active { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+  .gut-col.u .score-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  .gut-col.t .score-btn.active { background: var(--accent3); color: #000; border-color: var(--accent3); }
+  .add-btn {
+    width: 100%; background: var(--accent); color: #000; border: none; border-radius: var(--radius-sm);
+    padding: 16px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  }
+  .add-btn:hover { opacity: 0.9; }
+  .add-btn:active { transform: scale(0.98); }
+  .task-list { display: flex; flex-direction: column; gap: 10px; }
+  .task-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+    animation: slideIn 0.3s ease; position: relative; overflow: hidden;
+  }
+  .task-card::before { content:''; position:absolute; left:0;top:0;bottom:0;width:3px; }
+  .task-card.priority-high::before { background: var(--accent2); }
+  .task-card.priority-mid::before { background: var(--accent); }
+  .task-card.priority-low::before { background: var(--accent3); }
+  .task-card.completed .task-name { text-decoration: line-through; opacity: 0.5; }
+  @keyframes slideIn { from { opacity:0;transform:translateY(10px); } to { opacity:1;transform:translateY(0); } }
+  .rank-num { font-family:'Syne',sans-serif; font-size:11px; font-weight:800; color:var(--muted); min-width:20px; text-align:center; }
+  .task-info { flex:1; min-width:0; }
+  .task-name { font-size:15px; font-weight:500; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .task-scores { display:flex; gap:6px; }
+  .score-badge { font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; letter-spacing:0.5px; }
+  .badge-g { background:rgba(255,107,74,0.15); color:var(--accent2); }
+  .badge-u { background:rgba(232,255,71,0.15); color:var(--accent); }
+  .badge-t { background:rgba(74,173,255,0.15); color:var(--accent3); }
+  .gut-score { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; min-width:44px; text-align:right; }
+  .priority-high .gut-score { color:var(--accent2); }
+  .priority-mid .gut-score { color:var(--accent); }
+  .priority-low .gut-score { color:var(--accent3); }
+  .delete-btn { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:4px; line-height:1; transition:color 0.2s; }
+  .delete-btn:hover { color:var(--accent2); }
+  .complete-btn {
+    background:none; border:1px solid var(--border); border-radius:50%;
+    width:28px; height:28px; min-width:28px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--muted); font-size:13px; transition:all 0.2s;
+  }
+  .complete-btn.done { background:#2a3a1a; border-color:#5a9e2f; color:#5a9e2f; }
+  .empty { text-align:center; padding:48px 24px; color:var(--muted); }
+  .empty-icon { font-size:48px; margin-bottom:12px; }
+  .empty-title { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text); }
+  .empty-sub { font-size:13px; line-height:1.5; }
+  .gut-explain { background:var(--surface2); border-radius:var(--radius); padding:18px; margin-bottom:16px; }
+  .gut-explain-title { font-family:'Syne',sans-serif; font-weight:700; font-size:16px; margin-bottom:12px; }
+  .gut-explain-row { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+  .gut-letter { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; min-width:28px; }
+  .gut-explain-text { font-size:13px; color:var(--muted); line-height:1.4; }
+  .gut-explain-text strong { color:var(--text); display:block; font-size:14px; margin-bottom:2px; }
+  .guide-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:12px; }
+  .guide-score { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; margin-bottom:4px; }
+  .guide-label { font-size:14px; font-weight:600; margin-bottom:6px; }
+  .guide-desc { font-size:13px; color:var(--muted); line-height:1.5; }
+  .bottom-nav {
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:480px; background:rgba(14,15,19,0.95);
+    border-top:1px solid var(--border); padding:12px 32px 24px;
+    display:flex; justify-content:space-around; backdrop-filter:blur(12px); z-index:20;
+  }
+  .nav-btn { display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; font-size:10px; font-weight:500; transition:color 0.2s; padding:4px 12px; }
+  .nav-btn.active { color:var(--accent); }
+  .nav-icon { font-size:20px; }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100; display:flex; align-items:flex-end; backdrop-filter:blur(4px); }
+  @media (min-width:768px) { .modal-overlay { align-items:center; justify-content:center; } .modal { border-radius:20px !important; max-width:520px; width:100%; } }
+  .modal { background:var(--surface); border-radius:24px 24px 0 0; padding:28px 24px 40px; width:100%; border-top:1px solid var(--border); animation:slideUp 0.3s ease; max-height:90vh; overflow-y:auto; }
+  @keyframes slideUp { from { transform:translateY(40px);opacity:0; } to { transform:translateY(0);opacity:1; } }
+  .modal-title { font-family:'Syne',sans-serif; font-size:20px; font-weight:800; margin-bottom:6px; }
+  .modal-sub { font-size:13px; color:var(--muted); margin-bottom:24px; line-height:1.5; }
+  .modal-label { font-size:12px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; display:block; }
+  .modal-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; padding:14px 16px; outline:none; margin-bottom:8px; transition:border-color 0.2s; }
+  .modal-input:focus { border-color:var(--accent); }
+  .modal-input::placeholder { color:var(--muted); }
+  .modal-help { font-size:12px; color:var(--muted); margin-bottom:20px; line-height:1.5; }
+  .modal-help a { color:var(--accent); text-decoration:none; }
+  .modal-btns { display:flex; gap:10px; }
+  .modal-save { flex:1; background:var(--accent); color:#000; border:none; border-radius:var(--radius-sm); padding:16px; font-family:'Syne',sans-serif; font-weight:700; font-size:15px; cursor:pointer; }
+  .modal-skip { background:var(--surface2); border:1px solid var(--border); color:var(--muted); border-radius:var(--radius-sm); padding:16px 20px; font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; }
+  .code-block { background:var(--surface2); border-radius:10px; padding:14px; font-size:11px; color:var(--muted); font-family:monospace; margin-bottom:20px; overflow-x:auto; white-space:pre; line-height:1.5; }
+  .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:var(--surface2); border:1px solid var(--border); color:var(--text); padding:12px 20px; border-radius:50px; font-size:13px; z-index:200; opacity:0; transition:opacity 0.3s; white-space:nowrap; max-width:90vw; }
+  .toast.show { opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setupModal" style="display:none">
+  <div class="modal">
+    <div class="modal-title">Conectar ao Google Sheets</div>
+    <div class="modal-sub">Cole aqui o link do seu Google Apps Script para salvar automaticamente na nuvem.</div>
+    <label class="modal-label">URL do Apps Script</label>
+    <input class="modal-input" id="scriptUrl" type="url" placeholder="https://script.google.com/macros/s/...">
+    <div class="modal-help">Não sabe como criar? <a href="#" onclick="showGuideModal();return false;">Veja o passo a passo</a></div>
+    <div class="modal-btns">
+      <button class="modal-skip" onclick="closeSetup()">Agora não</button>
+      <button class="modal-save" onclick="saveScript()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDE MODAL -->
+<div class="modal-overlay" id="guideModal" style="display:none">
+  <div class="modal">
+    <div class="modal-title">Como configurar o backup</div>
+    <div class="modal-sub">Siga esses passos uma única vez — leva uns 5 minutos.</div>
+    <div style="font-size:14px;line-height:1.9;color:var(--muted);margin-bottom:16px">
+      <div><span style="color:var(--accent);font-weight:700">1.</span> Abra o <strong style="color:var(--text)">Google Sheets</strong> e crie uma planilha nova</div>
+      <div><span style="color:var(--accent);font-weight:700">2.</span> No menu clique em <strong style="color:var(--text)">Extensões → Apps Script</strong></div>
+      <div><span style="color:var(--accent);font-weight:700">3.</span> Apague tudo e cole o código abaixo</div>
+      <div><span style="color:var(--accent);font-weight:700">4.</span> Clique em <strong style="color:var(--text)">Implantar → Nova implantação</strong></div>
+      <div><span style="color:var(--accent);font-weight:700">5.</span> Tipo: <strong style="color:var(--text)">App da Web</strong> · Acesso: <strong style="color:var(--text)">Qualquer pessoa</strong></div>
+      <div><span style="color:var(--accent);font-weight:700">6.</span> Copie a URL gerada e cole no campo anterior</div>
+    </div>
+    <div class="code-block">function doPost(e) {
+  var sheet = SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.clearContents();
+  sheet.appendRow(["Tarefa","G","U","T","Score","Feita"]);
+  data.tasks.forEach(function(t) {
+    sheet.appendRow([
+      t.name,t.g,t.u,t.t,
+      t.g*t.u*t.t,t.done?"Sim":"Não"
+    ]);
+  });
+  return ContentService
+    .createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+    <button class="modal-save" onclick="closeGuideModal()" style="width:100%">Entendi</button>
+  </div>
+</div>
+
+<!-- SIDEBAR (desktop only) -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">GUT<span>·matriz</span></div>
+    <div class="subtitle">Gravidade × Urgência × Tendência</div>
+  </div>
+  <div class="sidebar-nav">
+    <button class="nav-item active" id="sideRanking" onclick="showView('ranking')">📋 &nbsp;Ranking</button>
+    <button class="nav-item" id="sideGuide" onclick="showView('guide')">📖 &nbsp;Guia GUT</button>
+  </div>
+  <div class="sidebar-sync">
+    <button class="sync-btn-desk" id="syncBtnDesk" onclick="openSetup()">
+      ☁ &nbsp;<span id="syncLabelDesk">Configurar backup</span>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- MOBILE HEADER -->
+  <div class="mobile-header">
+    <div class="mobile-header-top">
+      <div class="logo-mob">GUT<span>·matriz</span></div>
+      <button class="sync-btn-mob" id="syncBtnMob" onclick="openSetup()">☁ <span id="syncLabelMob">Backup</span></button>
+    </div>
+    <div class="subtitle-mob">Priorize o que importa — G × U × T</div>
+  </div>
+
+  <!-- RANKING VIEW -->
+  <div id="viewRanking">
+
+    <!-- mobile tabs -->
+    <div class="mobile-tabs">
+      <button class="tab active" onclick="filterTasks('all',this)">Todas</button>
+      <button class="tab" onclick="filterTasks('pending',this)">Pendentes</button>
+      <button class="tab" onclick="filterTasks('done',this)">Concluídas</button>
+    </div>
+
+    <!-- DESKTOP content -->
+    <div class="desk-only">
+      <div class="page-title">Ranking de Prioridade <span class="page-badge" id="taskBadge">0 tarefas</span></div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="statTotal" style="color:var(--accent)">0</div><div class="stat-label">Total</div></div>
+        <div class="stat-card"><div class="stat-val" id="statPending" style="color:var(--accent2)">0</div><div class="stat-label">Pendentes</div></div>
+        <div class="stat-card"><div class="stat-val" id="statDone" style="color:#5a9e2f">0</div><div class="stat-label">Concluídas</div></div>
+      </div>
+      <div class="add-card-desk">
+        <div class="section-title">Nova tarefa</div>
+        <input class="input-task" id="taskNameD" type="text" placeholder="Descreva o problema ou tarefa..." maxlength="80" style="margin-bottom:16px">
+        <div class="gut-row" style="max-width:580px">
+          <div class="gut-col g"><label>G · Gravidade</label><div class="score-btns" id="btnGD"><button class="score-btn" onclick="setScore('g',1,this,'D')">1</button><button class="score-btn" onclick="setScore('g',2,this,'D')">2</button><button class="score-btn" onclick="setScore('g',3,this,'D')">3</button><button class="score-btn" onclick="setScore('g',4,this,'D')">4</button><button class="score-btn" onclick="setScore('g',5,this,'D')">5</button></div></div>
+          <div class="gut-col u"><label>U · Urgência</label><div class="score-btns" id="btnUD"><button class="score-btn" onclick="setScore('u',1,this,'D')">1</button><button class="score-btn" onclick="setScore('u',2,this,'D')">2</button><button class="score-btn" onclick="setScore('u',3,this,'D')">3</button><button class="score-btn" onclick="setScore('u',4,this,'D')">4</button><button class="score-btn" onclick="setScore('u',5,this,'D')">5</button></div></div>
+          <div class="gut-col t"><label>T · Tendência</label><div class="score-btns" id="btnTD"><button class="score-btn" onclick="setScore('t',1,this,'D')">1</button><button class="score-btn" onclick="setScore('t',2,this,'D')">2</button><button class="score-btn" onclick="setScore('t',3,this,'D')">3</button><button class="score-btn" onclick="setScore('t',4,this,'D')">4</button><button class="score-btn" onclick="setScore('t',5,this,'D')">5</button></div></div>
+        </div>
+        <button class="add-btn" style="max-width:200px" onclick="addTask('D')">+ Adicionar</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="section-title" style="margin:0">Lista de tarefas</div>
+        <div style="display:flex;gap:8px">
+          <button class="tab active" style="font-size:12px;padding:6px 14px" onclick="filterTasks('all',this)">Todas</button>
+          <button class="tab" style="font-size:12px;padding:6px 14px" onclick="filterTasks('pending',this)">Pendentes</button>
+          <button class="tab" style="font-size:12px;padding:6px 14px" onclick="filterTasks('done',this)">Concluídas</button>
+        </div>
+      </div>
+      <div class="col-header"><div>#</div><div>Tarefa</div><div>Pontuação</div><div>Score</div><div></div><div></div></div>
+      <div id="taskListD"></div>
+    </div>
+
+    <!-- MOBILE form + list -->
+    <div class="mobile-form section">
+      <div class="section-title">Nova tarefa</div>
+      <div class="add-card">
+        <input class="input-task" id="taskNameM" type="text" placeholder="Descreva o problema ou tarefa..." maxlength="80">
+        <div class="gut-row">
+          <div class="gut-col g"><label>G · Gravidade</label><div class="score-btns" id="btnGM"><button class="score-btn" onclick="setScore('g',1,this,'M')">1</button><button class="score-btn" onclick="setScore('g',2,this,'M')">2</button><button class="score-btn" onclick="setScore('g',3,this,'M')">3</button><button class="score-btn" onclick="setScore('g',4,this,'M')">4</button><button class="score-btn" onclick="setScore('g',5,this,'M')">5</button></div></div>
+          <div class="gut-col u"><label>U · Urgência</label><div class="score-btns" id="btnUM"><button class="score-btn" onclick="setScore('u',1,this,'M')">1</button><button class="score-btn" onclick="setScore('u',2,this,'M')">2</button><button class="score-btn" onclick="setScore('u',3,this,'M')">3</button><button class="score-btn" onclick="setScore('u',4,this,'M')">4</button><button class="score-btn" onclick="setScore('u',5,this,'M')">5</button></div></div>
+          <div class="gut-col t"><label>T · Tendência</label><div class="score-btns" id="btnTM"><button class="score-btn" onclick="setScore('t',1,this,'M')">1</button><button class="score-btn" onclick="setScore('t',2,this,'M')">2</button><button class="score-btn" onclick="setScore('t',3,this,'M')">3</button><button class="score-btn" onclick="setScore('t',4,this,'M')">4</button><button class="score-btn" onclick="setScore('t',5,this,'M')">5</button></div></div>
+        </div>
+        <button class="add-btn" onclick="addTask('M')">Adicionar tarefa</button>
+      </div>
+      <div class="section-title">Ranking de prioridade</div>
+      <div class="task-list mobile-list" id="taskListM"></div>
+    </div>
+  </div>
+
+  <!-- GUIDE VIEW -->
+  <div id="viewGuide" style="display:none">
+    <div class="desk-only"><div class="page-title">Guia da Matriz GUT</div></div>
+    <div class="section" style="padding-top:8px">
+      <div class="gut-explain">
+        <div class="gut-explain-title">Como funciona a Matriz GUT</div>
+        <div class="gut-explain-row"><div class="gut-letter" style="color:var(--accent2)">G</div><div class="gut-explain-text"><strong>Gravidade</strong>Qual o impacto real do problema? Afeta pessoas, resultados, dinheiro?</div></div>
+        <div class="gut-explain-row"><div class="gut-letter" style="color:var(--accent)">U</div><div class="gut-explain-text"><strong>Urgência</strong>Qual a pressão do tempo? Precisa ser resolvido agora ou pode esperar?</div></div>
+        <div class="gut-explain-row"><div class="gut-letter" style="color:var(--accent3)">T</div><div class="gut-explain-text"><strong>Tendência</strong>Se não agir, o problema piora sozinho? Tende a se agravar?</div></div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)">A pontuação final é <strong style="color:var(--text)">G × U × T</strong>. Quanto maior, maior a prioridade. Máximo possível: 125.</div>
+      </div>
+      <div class="section-title">Escala de pontuação</div>
+      <div class="guide-grid">
+        <div class="guide-card"><div class="guide-score" style="color:var(--accent2)">5</div><div class="guide-label">Extremamente grave/urgente</div><div class="guide-desc">Impacto alto, sem tempo, agrava rapidamente.</div></div>
+        <div class="guide-card"><div class="guide-score" style="color:#ff9f4a">4</div><div class="guide-label">Muito grave / urgente</div><div class="guide-desc">Situação séria, pressão de tempo considerável.</div></div>
+        <div class="guide-card"><div class="guide-score" style="color:var(--accent)">3</div><div class="guide-label">Moderado</div><div class="guide-desc">Impacto médio, prazo razoável, pode piorar.</div></div>
+        <div class="guide-card"><div class="guide-score" style="color:#6bcf6b">2</div><div class="guide-label">Pouco grave / urgente</div><div class="guide-desc">Impacto pequeno, situação relativamente estável.</div></div>
+        <div class="guide-card"><div class="guide-score" style="color:var(--accent3)">1</div><div class="guide-label">Sem gravidade / urgência</div><div class="guide-desc">Pode ignorar por agora sem consequências sérias.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- BOTTOM NAV (mobile) -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="navRanking" onclick="showView('ranking')"><span class="nav-icon">📋</span><span>Ranking</span></button>
+  <button class="nav-btn" id="navGuide" onclick="showView('guide')"><span class="nav-icon">📖</span><span>Guia</span></button>
+</div>
+
+<script>
+  let scores = { g:0, u:0, t:0 };
+  let tasks = [];
+  let currentFilter = 'all';
+  let scriptUrl = '';
+
+  function init() {
+    const saved = localStorage.getItem('gut_tasks');
+    if (saved) tasks = JSON.parse(saved);
+    scriptUrl = localStorage.getItem('gut_script') || '';
+    if (scriptUrl) updateSyncUI(true);
+    renderTasks();
+  }
+
+  function updateSyncUI(active) {
+    const lm = document.getElementById('syncLabelMob');
+    const ld = document.getElementById('syncLabelDesk');
+    const bm = document.getElementById('syncBtnMob');
+    const bd = document.getElementById('syncBtnDesk');
+    if (lm) lm.textContent = active ? '✓ Ativo' : 'Backup';
+    if (ld) ld.textContent = active ? '✓ Backup ativo' : 'Configurar backup';
+    if (bm) bm.classList.toggle('synced', active);
+    if (bd) bd.classList.toggle('synced', active);
+  }
+
+  function setScore(dim, val, btn, mode) {
+    scores[dim] = val;
+    const id = 'btn' + dim.toUpperCase() + mode;
+    const container = document.getElementById(id);
+    if (container) container.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function addTask(mode) {
+    const inputId = mode === 'D' ? 'taskNameD' : 'taskNameM';
+    const name = document.getElementById(inputId).value.trim();
+    if (!name) { showToast('Digite o nome da tarefa'); return; }
+    if (!scores.g || !scores.u || !scores.t) { showToast('Dê uma nota para G, U e T'); return; }
+    const task = {
+      id: Date.now(), name,
+      g: scores.g, u: scores.u, t: scores.t,
+      score: scores.g * scores.u * scores.t,
+      done: false, createdAt: new Date().toISOString()
+    };
+    tasks.push(task);
+    saveTasks(); renderTasks(); resetForm(mode);
+    showToast('Adicionada! Score: ' + task.score);
+    if (scriptUrl) syncToSheets();
+  }
+
+  function resetForm(mode) {
+    const inputId = mode === 'D' ? 'taskNameD' : 'taskNameM';
+    const el = document.getElementById(inputId);
+    if (el) el.value = '';
+    scores = { g:0, u:0, t:0 };
+    document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasks(); renderTasks();
+    if (scriptUrl) syncToSheets();
+  }
+
+  function toggleDone(id) {
+    const t = tasks.find(t => t.id === id);
+    if (t) { t.done = !t.done; saveTasks(); renderTasks(); }
+    if (scriptUrl) syncToSheets();
+  }
+
+  function filterTasks(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTasks();
+  }
+
+  function renderTasks() {
+    let filtered = [...tasks];
+    if (currentFilter === 'pending') filtered = filtered.filter(t => !t.done);
+    if (currentFilter === 'done') filtered = filtered.filter(t => t.done);
+    filtered.sort((a, b) => b.score - a.score);
+
+    const total = tasks.length;
+    const done = tasks.filter(t => t.done).length;
+    const pending = total - done;
+    const el = (id) => document.getElementById(id);
+    if (el('statTotal')) el('statTotal').textContent = total;
+    if (el('statPending')) el('statPending').textContent = pending;
+    if (el('statDone')) el('statDone').textContent = done;
+    if (el('taskBadge')) el('taskBadge').textContent = total + ' tarefa' + (total !== 1 ? 's' : '');
+
+    const emptyHtml = `<div class="empty"><div class="empty-icon">🎯</div><div class="empty-title">${currentFilter==='done'?'Nenhuma concluída':'Nenhuma tarefa ainda'}</div><div class="empty-sub">${currentFilter==='done'?'Conclua tarefas marcando o ✓':'Adicione sua primeira tarefa acima.'}</div></div>`;
+
+    // Mobile
+    const lm = el('taskListM');
+    if (lm) {
+      lm.innerHTML = !filtered.length ? emptyHtml : filtered.map((t,i) => {
+        const pc = t.score>=75?'priority-high':t.score>=27?'priority-mid':'priority-low';
+        return `<div class="task-card ${pc} ${t.done?'completed':''}">
+          <div class="rank-num">${t.done?'✓':'#'+(i+1)}</div>
+          <div class="task-info"><div class="task-name">${t.name}</div><div class="task-scores"><span class="score-badge badge-g">G:${t.g}</span><span class="score-badge badge-u">U:${t.u}</span><span class="score-badge badge-t">T:${t.t}</span></div></div>
+          <div class="gut-score">${t.score}</div>
+          <button class="complete-btn ${t.done?'done':''}" onclick="toggleDone(${t.id})">✓</button>
+          <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+        </div>`;
+      }).join('');
+    }
+
+    // Desktop
+    const ld = el('taskListD');
+    if (ld) {
+      ld.innerHTML = !filtered.length ? emptyHtml : filtered.map((t,i) => {
+        const pc = t.score>=75?'priority-high':t.score>=27?'priority-mid':'priority-low';
+        const sc = t.score>=75?'var(--accent2)':t.score>=27?'var(--accent)':'var(--accent3)';
+        return `<div class="task-card-desk ${pc} ${t.done?'completed':''}">
+          <div style="font-family:Syne,sans-serif;font-weight:800;font-size:12px;color:var(--muted)">${t.done?'✓':'#'+(i+1)}</div>
+          <div class="task-name-d" style="font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name}</div>
+          <div style="display:flex;gap:5px"><span class="score-badge badge-g">G:${t.g}</span><span class="score-badge badge-u">U:${t.u}</span><span class="score-badge badge-t">T:${t.t}</span></div>
+          <div style="font-family:Syne,sans-serif;font-weight:800;font-size:20px;color:${sc}">${t.score}</div>
+          <button class="complete-btn ${t.done?'done':''}" onclick="toggleDone(${t.id})">✓</button>
+          <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  function saveTasks() { localStorage.setItem('gut_tasks', JSON.stringify(tasks)); }
+
+  async function syncToSheets() {
+    if (!scriptUrl) return;
+    try {
+      await fetch(scriptUrl, { method:'POST', mode:'no-cors', body:JSON.stringify({tasks}), headers:{'Content-Type':'application/json'} });
+      showToast('☁ Sincronizado com Google Sheets');
+    } catch(e) { showToast('Erro ao sincronizar.'); }
+  }
+
+  function openSetup() { document.getElementById('setupModal').style.display='flex'; }
+  function closeSetup() { document.getElementById('setupModal').style.display='none'; }
+  function showGuideModal() { document.getElementById('setupModal').style.display='none'; document.getElementById('guideModal').style.display='flex'; }
+  function closeGuideModal() { document.getElementById('guideModal').style.display='none'; document.getElementById('setupModal').style.display='flex'; }
+
+  function saveScript() {
+    const url = document.getElementById('scriptUrl').value.trim();
+    if (!url) { showToast('Cole a URL do Apps Script'); return; }
+    scriptUrl = url;
+    localStorage.setItem('gut_script', url);
+    updateSyncUI(true); closeSetup();
+    showToast('✓ Backup configurado!');
+    syncToSheets();
+  }
+
+  function showView(v) {
+    document.getElementById('viewRanking').style.display = v==='ranking'?'block':'none';
+    document.getElementById('viewGuide').style.display = v==='guide'?'block':'none';
+    ['navRanking','sideRanking'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.toggle('active', v==='ranking'); });
+    ['navGuide','sideGuide'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.toggle('active', v==='guide'); });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  init();
+</script>
+</body>
+</html>
