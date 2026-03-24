@@ -300,6 +300,128 @@ body { font-family: 'Lora', Georgia, serif; background: var(--bg); color: var(--
 
 /* OVERDUE section header */
 .overdue-header { background:var(--accent2-light); border:1px solid #f5c6c0; border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:12px; font-size:12px; color:var(--accent2); font-weight:600; display:flex; align-items:center; gap:6px; font-family:'Syne',sans-serif; }
+
+/* ===== TASK DETAIL MODAL ===== */
+.detail-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 150; display: flex; align-items: flex-end;
+  backdrop-filter: blur(3px);
+}
+@media (min-width: 768px) {
+  .detail-overlay { align-items: center; justify-content: center; }
+  .detail-modal { border-radius: 18px !important; max-width: 560px; width: 100%; max-height: 88vh; }
+}
+.detail-modal {
+  background: var(--surface); border-radius: 22px 22px 0 0;
+  width: 100%; max-height: 88vh; overflow-y: auto;
+  animation: slideUp 0.28s ease;
+  border-top: 1px solid var(--border);
+}
+.detail-header {
+  padding: 20px 20px 0;
+  position: sticky; top: 0; background: var(--surface);
+  border-bottom: 1px solid var(--border); padding-bottom: 14px;
+  z-index: 2;
+}
+.detail-header-top {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;
+}
+.detail-title-label {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+}
+.detail-close {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 50%; width: 30px; height: 30px; display: flex;
+  align-items: center; justify-content: center; cursor: pointer;
+  font-size: 16px; color: var(--muted); transition: all 0.2s;
+}
+.detail-close:hover { background: var(--accent2-light); color: var(--accent2); }
+.detail-body { padding: 18px 20px 32px; }
+.detail-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-family: 'Lora', serif;
+  font-size: 15px; font-weight: 600; padding: 12px 14px; outline: none;
+  margin-bottom: 16px; transition: border-color 0.2s;
+}
+.detail-input:focus { border-color: var(--accent); }
+.detail-section-label {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+  margin-bottom: 8px; display: block;
+}
+.detail-notes {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-family: 'Lora', serif;
+  font-size: 13px; padding: 12px 14px; outline: none; resize: vertical;
+  min-height: 80px; transition: border-color 0.2s; margin-bottom: 16px;
+  font-style: italic;
+}
+.detail-notes:focus { border-color: var(--accent); font-style: normal; }
+.detail-notes::placeholder { font-style: italic; color: var(--muted); }
+.steps-list { margin-bottom: 10px; }
+.step-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.step-check {
+  width: 20px; height: 20px; min-width: 20px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: transparent; transition: all 0.2s;
+}
+.step-check.done { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+.step-text {
+  flex: 1; font-size: 13px; font-family: 'Lora', serif; background: none;
+  border: none; outline: none; color: var(--text); padding: 0;
+}
+.step-text.done { text-decoration: line-through; color: var(--muted); }
+.step-del { background: none; border: none; color: var(--muted); font-size: 16px; cursor: pointer; padding: 2px 4px; }
+.step-del:hover { color: var(--accent2); }
+.add-step-row {
+  display: flex; gap: 8px; margin-bottom: 16px;
+}
+.add-step-input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-family: 'Lora', serif;
+  font-size: 13px; padding: 9px 12px; outline: none; transition: border-color 0.2s;
+}
+.add-step-input:focus { border-color: var(--accent); }
+.add-step-input::placeholder { color: var(--muted); font-style: italic; }
+.add-step-btn {
+  background: var(--accent-light); border: 1px solid var(--accent);
+  color: var(--accent); border-radius: var(--radius-sm); padding: 9px 14px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer;
+}
+.detail-save {
+  width: 100%; background: var(--accent); color: #fff; border: none;
+  border-radius: var(--radius-sm); padding: 14px; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 14px; cursor: pointer; transition: background 0.2s; margin-top: 4px;
+}
+.detail-save:hover { background: var(--accent-hover); }
+.task-card { cursor: pointer; }
+.task-card-desk { cursor: pointer; }
+.steps-progress {
+  font-size: 11px; color: var(--muted); font-family: 'Lora', serif;
+  font-style: italic; margin-left: 4px;
+}
+
+/* ===== EXPANDABLE EXTRAS IN FORM ===== */
+.extras-toggle {
+  width: 100%; background: none; border: 1px dashed var(--border);
+  border-radius: var(--radius-sm); color: var(--muted); padding: 9px 14px;
+  font-family: 'Lora', serif; font-size: 12px; font-style: italic;
+  cursor: pointer; transition: all 0.2s; text-align: left;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.extras-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.extras-toggle.open { border-style: solid; border-color: var(--accent); color: var(--accent); background: var(--accent-light); margin-bottom: 0; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.extras-body {
+  background: var(--surface2); border: 1px solid var(--accent);
+  border-top: none; border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  padding: 14px; margin-bottom: 12px; display: none;
+}
+.extras-body.open { display: block; }
 </style>
 </head>
 <body>
@@ -341,12 +463,16 @@ body { font-family: 'Lora', Georgia, serif; background: var(--bg); color: var(--
   var data = JSON.parse(e.postData.contents);
   sheet.clearContents();
   sheet.appendRow(["Tarefa","G","T","Vencimento",
-    "U_calc","Score","Feita","ID","CriadaEm"]);
+    "U_calc","Score","Feita","ID","CriadaEm",
+    "Anotacoes","Etapas"]);
   data.tasks.forEach(function(t) {
     var u = calcU(t.dueDate);
     sheet.appendRow([t.name,t.g,t.t,
       t.dueDate||"",u,t.g*u*t.t,
-      t.done?"Sim":"Não",t.id,t.createdAt||""]);
+      t.done?"Sim":"Não",t.id,t.createdAt||"",
+      t.notes||"",
+      t.steps&&t.steps.length>0?JSON.stringify(t.steps):""
+    ]);
   });
   return ContentService
     .createTextOutput(JSON.stringify({ok:true}))
@@ -369,10 +495,12 @@ function doGet(e) {
   var tasks = [];
   for(var i=1;i&lt;rows.length;i++){
     var r=rows[i]; if(!r[0]) continue;
+    var steps=[];
+    try{ if(r[10]) steps=JSON.parse(r[10]); }catch(err){}
     tasks.push({name:r[0],g:Number(r[1]),
       t:Number(r[2]),dueDate:r[3]||null,
       done:r[6]==="Sim",id:Number(r[7])||Date.now()+i,
-      createdAt:r[8]||""});
+      createdAt:r[8]||"",notes:r[9]||"",steps:steps});
   }
   return ContentService
     .createTextOutput(JSON.stringify({tasks:tasks}))
@@ -467,6 +595,20 @@ function doGet(e) {
             </div>
           </div>
         </div>
+        <button class="extras-toggle" id="extrasToggleD" onclick="toggleExtras('D')" style="max-width:480px">
+          <span id="extrasIconD">＋</span> Anotações e etapas (opcional)
+        </button>
+        <div class="extras-body" id="extrasBodyD" style="max-width:480px">
+          <label class="detail-section-label" style="margin-bottom:6px">Anotações</label>
+          <textarea class="detail-notes" id="newNotesD" placeholder="Observações, contexto, links..." style="margin-bottom:12px"></textarea>
+          <label class="detail-section-label" style="margin-bottom:6px">Etapas <span class="steps-progress" id="newStepsProgressD"></span></label>
+          <div class="steps-list" id="newStepsListD"></div>
+          <div class="add-step-row">
+            <input class="add-step-input" id="newStepInputFormD" type="text" placeholder="Nova etapa..."
+              onkeydown="if(event.key==='Enter') addStepForm('D')">
+            <button class="add-step-btn" onclick="addStepForm('D')">+ Add</button>
+          </div>
+        </div>
         <button class="add-btn" style="max-width:200px" onclick="addTask('D')">+ Adicionar</button>
       </div>
 
@@ -522,6 +664,20 @@ function doGet(e) {
               <input type="date" class="date-input" id="dueDateM" onchange="updateDate('M')">
             </div>
             <div class="urgency-preview">U calculado: <span class="urgency-badge" id="uPreviewM">1</span> <span id="uDescM" style="font-style:italic">Sem data definida</span></div>
+          </div>
+        </div>
+        <button class="extras-toggle" id="extrasToggleM" onclick="toggleExtras('M')">
+          <span id="extrasIconM">＋</span> Anotações e etapas (opcional)
+        </button>
+        <div class="extras-body" id="extrasBodyM">
+          <label class="detail-section-label" style="margin-bottom:6px">Anotações</label>
+          <textarea class="detail-notes" id="newNotesM" placeholder="Observações, contexto, links..." style="margin-bottom:12px"></textarea>
+          <label class="detail-section-label" style="margin-bottom:6px">Etapas <span class="steps-progress" id="newStepsProgressM"></span></label>
+          <div class="steps-list" id="newStepsListM"></div>
+          <div class="add-step-row">
+            <input class="add-step-input" id="newStepInputFormM" type="text" placeholder="Nova etapa..."
+              onkeydown="if(event.key==='Enter') addStepForm('M')">
+            <button class="add-step-btn" onclick="addStepForm('M')">+ Add</button>
           </div>
         </div>
         <button class="add-btn" onclick="addTask('M')">Adicionar tarefa</button>
@@ -618,7 +774,8 @@ let initialLoad = true;
 function calcUrgency(dueDate) {
   if (!dueDate) return 1;
   const today = new Date(); today.setHours(0,0,0,0);
-  const due = new Date(dueDate + 'T00:00:00');
+  const due = parseDueDate(dueDate);
+  if (!due || isNaN(due)) return 1;
   const days = Math.round((due - today) / 86400000);
   if (days < 5) return 5;
   if (days <= 14) return 4;
@@ -633,14 +790,34 @@ function calcScore(task) {
 function isOverdueOrToday(task) {
   if (!task.dueDate || task.done) return false;
   const today = new Date(); today.setHours(0,0,0,0);
-  const due = new Date(task.dueDate + 'T00:00:00');
+  const due = parseDueDate(task.dueDate);
+  if (!due || isNaN(due)) return false;
   return due <= today;
+}
+
+function parseDueDate(dueDate) {
+  if (!dueDate) return null;
+  // Normaliza formatos: YYYY-MM-DD ou DD/MM/YYYY ou Date object
+  if (typeof dueDate === 'string') {
+    // Formato DD/MM/YYYY vindo do Sheets
+    if (dueDate.includes('/')) {
+      const parts = dueDate.split('/');
+      if (parts.length === 3) return new Date(parts[2] + '-' + parts[1].padStart(2,'0') + '-' + parts[0].padStart(2,'0') + 'T00:00:00');
+    }
+    // Formato YYYY-MM-DD
+    if (dueDate.match(/^\d{4}-\d{2}-\d{2}$/)) return new Date(dueDate + 'T00:00:00');
+    // Outros formatos
+    const d = new Date(dueDate);
+    return isNaN(d) ? null : d;
+  }
+  return null;
 }
 
 function getDueLabel(dueDate) {
   if (!dueDate) return null;
   const today = new Date(); today.setHours(0,0,0,0);
-  const due = new Date(dueDate + 'T00:00:00');
+  const due = parseDueDate(dueDate);
+  if (!due || isNaN(due)) return null;
   const days = Math.round((due - today) / 86400000);
   if (days < 0) return { text: `Venceu há ${Math.abs(days)}d`, cls: 'due-alert' };
   if (days === 0) return { text: 'Vence hoje!', cls: 'due-alert' };
@@ -768,10 +945,13 @@ function addTask(mode) {
   if (!name) { showToast('Digite o nome da tarefa'); return; }
   if (!scores.g || !scores.t) { showToast('Dê uma nota para G e T'); return; }
   const u = calcUrgency(dueDateVal);
+  const notesEl = document.getElementById('newNotes' + mode);
   const task = {
     id: Date.now(), name,
     g: scores.g, t: scores.t,
     dueDate: dueDateVal,
+    notes: notesEl ? notesEl.value.trim() : '',
+    steps: newStepsForm[mode] ? JSON.parse(JSON.stringify(newStepsForm[mode])) : [],
     done: false, createdAt: new Date().toISOString()
   };
   tasks.push(task);
@@ -787,6 +967,12 @@ function resetForm() {
   document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
   setNoDate('M'); setNoDate('D');
   ['dueDateM','dueDateD'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  ['newNotesM','newNotesD'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  newStepsForm = { M: [], D: [] };
+  renderFormSteps('M'); renderFormSteps('D');
+  ['extrasBodyM','extrasBodyD'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.remove('open'); });
+  ['extrasToggleM','extrasToggleD'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.remove('open'); });
+  ['extrasIconM','extrasIconD'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent='＋'; });
 }
 
 function deleteTask(id) {
@@ -844,7 +1030,7 @@ function renderTasks() {
   const taskHtmlMobile = (t, i) => {
     const pc = t._score>=75?'priority-high':t._score>=27?'priority-mid':'priority-low';
     const due = getDueLabel(t.dueDate);
-    return `<div class="task-card ${pc} ${t.done?'completed':''}">
+    return `<div class="task-card ${pc} ${t.done?'completed':''}" onclick="openDetail(${t.id})">
       <div class="rank-num">${t.done?'✓':'#'+(i+1)}</div>
       <div class="task-info">
         <div class="task-name">${t.name}</div>
@@ -853,11 +1039,13 @@ function renderTasks() {
           <span class="score-badge badge-u">U:${t._u}</span>
           <span class="score-badge badge-t">T:${t.t}</span>
           ${due ? `<span class="due-badge ${due.cls}">${due.text}</span>` : ''}
+          ${t.notes ? '<span style="font-size:10px;color:var(--muted)">📝</span>' : ''}
+          ${t.steps && t.steps.length > 0 ? `<span style="font-size:10px;color:var(--muted)">☑ ${t.steps.filter(s=>s.done).length}/${t.steps.length}</span>` : ''}
         </div>
       </div>
       <div class="gut-score">${t._score}</div>
-      <button class="complete-btn ${t.done?'done':''}" onclick="toggleDone(${t.id})">✓</button>
-      <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+      <button class="complete-btn ${t.done?'done':''}" onclick="event.stopPropagation();toggleDone(${t.id})">✓</button>
+      <button class="delete-btn" onclick="event.stopPropagation();deleteTask(${t.id})">×</button>
     </div>`;
   };
 
@@ -865,18 +1053,19 @@ function renderTasks() {
     const pc = t._score>=75?'priority-high':t._score>=27?'priority-mid':'priority-low';
     const sc = t._score>=75?'var(--accent2)':t._score>=27?'var(--yellow)':'var(--accent3)';
     const due = getDueLabel(t.dueDate);
-    return `<div class="task-card-desk ${pc} ${t.done?'completed':''}">
+    return `<div class="task-card-desk ${pc} ${t.done?'completed':''}" onclick="openDetail(${t.id})">
       <div style="font-family:Syne,sans-serif;font-weight:800;font-size:11px;color:var(--muted)">${t.done?'✓':'#'+(i+1)}</div>
       <div>
         <div class="task-name-d" style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:Lora,serif;${t.done?'text-decoration:line-through;opacity:0.4':''}">
           ${t.name}
         </div>
         ${due ? `<span class="due-badge ${due.cls}" style="margin-top:3px;display:inline-block">${due.text}</span>` : ''}
+        ${t.notes ? '<span style="font-size:10px;color:var(--muted);font-style:italic;margin-left:4px">📝 anotações</span>' : ''}
       </div>
-      <div style="display:flex;gap:4px;align-items:center"><span class="score-badge badge-g">G:${t.g}</span><span class="score-badge badge-u">U:${t._u}</span><span class="score-badge badge-t">T:${t.t}</span></div>
+      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap"><span class="score-badge badge-g">G:${t.g}</span><span class="score-badge badge-u">U:${t._u}</span><span class="score-badge badge-t">T:${t.t}</span>${t.steps && t.steps.length > 0 ? `<span style="font-size:10px;color:var(--muted)">☑ ${t.steps.filter(s=>s.done).length}/${t.steps.length}</span>` : ''}</div>
       <div style="font-family:Syne,sans-serif;font-weight:800;font-size:18px;color:${sc}">${t._score}</div>
-      <button class="complete-btn ${t.done?'done':''}" onclick="toggleDone(${t.id})">✓</button>
-      <button class="delete-btn" onclick="deleteTask(${t.id})">×</button>
+      <button class="complete-btn ${t.done?'done':''}" onclick="event.stopPropagation();toggleDone(${t.id})">✓</button>
+      <button class="delete-btn" onclick="event.stopPropagation();deleteTask(${t.id})">×</button>
     </div>`;
   };
 
@@ -947,7 +1136,256 @@ function tapTip(el, dim, val) {
   tipTimeout = setTimeout(hideTip, 2500);
 }
 
+
+
+// ===== FORM EXTRAS =====
+let newStepsForm = { M: [], D: [] };
+
+function toggleExtras(mode) {
+  const toggle = document.getElementById('extrasToggle' + mode);
+  const body = document.getElementById('extrasBody' + mode);
+  const icon = document.getElementById('extrasIcon' + mode);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+  icon.textContent = isOpen ? '＋' : '－';
+}
+
+function addStepForm(mode) {
+  const input = document.getElementById('newStepInputForm' + mode);
+  const text = input.value.trim();
+  if (!text) return;
+  newStepsForm[mode].push({ id: Date.now(), text, done: false });
+  input.value = '';
+  renderFormSteps(mode);
+}
+
+function toggleFormStep(mode, id) {
+  const step = newStepsForm[mode].find(s => s.id === id);
+  if (step) { step.done = !step.done; renderFormSteps(mode); }
+}
+
+function deleteFormStep(mode, id) {
+  newStepsForm[mode] = newStepsForm[mode].filter(s => s.id !== id);
+  renderFormSteps(mode);
+}
+
+function renderFormSteps(mode) {
+  const list = document.getElementById('newStepsList' + mode);
+  const progress = document.getElementById('newStepsProgress' + mode);
+  if (!list) return;
+  const done = newStepsForm[mode].filter(s => s.done).length;
+  if (progress) progress.textContent = newStepsForm[mode].length > 0 ? `${done}/${newStepsForm[mode].length}` : '';
+  list.innerHTML = newStepsForm[mode].map(s => `
+    <div class="step-item">
+      <button class="step-check ${s.done?'done':''}" onclick="toggleFormStep('${mode}',${s.id})">${s.done?'✓':''}</button>
+      <span class="step-text ${s.done?'done':''}">${s.text}</span>
+      <button class="step-del" onclick="deleteFormStep('${mode}',${s.id})">×</button>
+    </div>
+  `).join('');
+}
+
+// ===== TASK DETAIL =====
+let detailTaskId = null;
+let detailScores = { g: 0, t: 0 };
+let detailDueDate = null;
+let detailSteps = [];
+
+function openDetail(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  detailTaskId = id;
+  detailScores = { g: task.g, t: task.t };
+  detailDueDate = task.dueDate || null;
+  detailSteps = task.steps ? JSON.parse(JSON.stringify(task.steps)) : [];
+
+  document.getElementById('detailName').value = task.name;
+  document.getElementById('detailNotes').value = task.notes || '';
+
+  // G and T buttons
+  ['g','t'].forEach(dim => {
+    const container = document.getElementById('btn' + dim.toUpperCase() + 'Det');
+    if (container) container.querySelectorAll('.score-btn').forEach((b,i) => {
+      b.classList.toggle('active', i+1 === task[dim]);
+    });
+  });
+
+  // Date
+  if (task.dueDate) {
+    setWithDateDetail();
+    document.getElementById('dueDateDet').value = task.dueDate;
+    updateDateDetail();
+  } else {
+    setNoDateDetail();
+  }
+
+  renderDetailSteps();
+  document.getElementById('detailModal').style.display = 'flex';
+}
+
+function closeDetail() {
+  document.getElementById('detailModal').style.display = 'none';
+  detailTaskId = null;
+}
+
+function closeDetailIfOutside(e) {
+  if (e.target.id === 'detailModal') closeDetail();
+}
+
+function setDetailScore(dim, val, btn) {
+  detailScores[dim] = val;
+  const container = document.getElementById('btn' + dim.toUpperCase() + 'Det');
+  if (container) container.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setNoDateDetail() {
+  detailDueDate = null;
+  document.getElementById('uNoDateDet').classList.add('active');
+  document.getElementById('uWithDateDet').classList.remove('active');
+  document.getElementById('dateWrapDet').classList.remove('show');
+  document.getElementById('uPreviewDet').textContent = '1';
+  document.getElementById('uDescDet').textContent = uDesc[0];
+}
+
+function setWithDateDetail() {
+  document.getElementById('uNoDateDet').classList.remove('active');
+  document.getElementById('uWithDateDet').classList.add('active');
+  document.getElementById('dateWrapDet').classList.add('show');
+}
+
+function updateDateDetail() {
+  const input = document.getElementById('dueDateDet');
+  detailDueDate = input.value || null;
+  const u = calcUrgency(detailDueDate);
+  document.getElementById('uPreviewDet').textContent = u;
+  document.getElementById('uDescDet').textContent = uDesc[u-1] || '';
+}
+
+function addStep() {
+  const input = document.getElementById('newStepInput');
+  const text = input.value.trim();
+  if (!text) return;
+  detailSteps.push({ id: Date.now(), text, done: false });
+  input.value = '';
+  renderDetailSteps();
+}
+
+function toggleStep(id) {
+  const step = detailSteps.find(s => s.id === id);
+  if (step) { step.done = !step.done; renderDetailSteps(); }
+}
+
+function deleteStep(id) {
+  detailSteps = detailSteps.filter(s => s.id !== id);
+  renderDetailSteps();
+}
+
+function renderDetailSteps() {
+  const list = document.getElementById('stepsList');
+  const progress = document.getElementById('stepsProgress');
+  if (!list) return;
+  const done = detailSteps.filter(s => s.done).length;
+  if (progress) progress.textContent = detailSteps.length > 0 ? `${done}/${detailSteps.length}` : '';
+  list.innerHTML = detailSteps.map(s => `
+    <div class="step-item">
+      <button class="step-check ${s.done?'done':''}" onclick="toggleStep(${s.id})">${s.done?'✓':''}</button>
+      <span class="step-text ${s.done?'done':''}">${s.text}</span>
+      <button class="step-del" onclick="deleteStep(${s.id})">×</button>
+    </div>
+  `).join('');
+}
+
+function saveDetail() {
+  if (!detailTaskId) return;
+  const name = document.getElementById('detailName').value.trim();
+  if (!name) { showToast('Digite o nome da tarefa'); return; }
+  if (!detailScores.g || !detailScores.t) { showToast('Dê uma nota para G e T'); return; }
+
+  const task = tasks.find(t => t.id === detailTaskId);
+  if (!task) return;
+
+  task.name = name;
+  task.g = detailScores.g;
+  task.t = detailScores.t;
+  task.dueDate = detailDueDate;
+  task.notes = document.getElementById('detailNotes').value.trim();
+  task.steps = detailSteps;
+
+  saveTasks(); renderTasks();
+  showToast('✓ Tarefa atualizada!');
+  if (scriptUrl) syncToSheets();
+  closeDetail();
+}
+
+
 init();
 </script>
+
+<!-- TASK DETAIL MODAL -->
+<div class="detail-overlay" id="detailModal" style="display:none" onclick="closeDetailIfOutside(event)">
+  <div class="detail-modal">
+    <div class="detail-header">
+      <div class="detail-header-top">
+        <span class="detail-title-label">Editar tarefa</span>
+        <button class="detail-close" onclick="closeDetail()">×</button>
+      </div>
+    </div>
+    <div class="detail-body">
+      <input class="detail-input" id="detailName" type="text" placeholder="Nome da tarefa" maxlength="100">
+
+      <div class="gut-row" style="margin-bottom:14px">
+        <div class="gut-col g">
+          <div class="gut-col-label g-color" style="margin-bottom:8px">G — Gravidade</div>
+          <div class="score-btns" id="btnGDet">
+            <button class="score-btn" onclick="setDetailScore('g',1,this)" onmouseenter="showTip(this,'g',1)" onmouseleave="hideTip()">1</button>
+            <button class="score-btn" onclick="setDetailScore('g',2,this)" onmouseenter="showTip(this,'g',2)" onmouseleave="hideTip()">2</button>
+            <button class="score-btn" onclick="setDetailScore('g',3,this)" onmouseenter="showTip(this,'g',3)" onmouseleave="hideTip()">3</button>
+            <button class="score-btn" onclick="setDetailScore('g',4,this)" onmouseenter="showTip(this,'g',4)" onmouseleave="hideTip()">4</button>
+            <button class="score-btn" onclick="setDetailScore('g',5,this)" onmouseenter="showTip(this,'g',5)" onmouseleave="hideTip()">5</button>
+          </div>
+        </div>
+        <div class="gut-col t">
+          <div class="gut-col-label t-color" style="margin-bottom:8px">T — Tendência</div>
+          <div class="score-btns" id="btnTDet">
+            <button class="score-btn" onclick="setDetailScore('t',1,this)" onmouseenter="showTip(this,'t',1)" onmouseleave="hideTip()">1</button>
+            <button class="score-btn" onclick="setDetailScore('t',2,this)" onmouseenter="showTip(this,'t',2)" onmouseleave="hideTip()">2</button>
+            <button class="score-btn" onclick="setDetailScore('t',3,this)" onmouseenter="showTip(this,'t',3)" onmouseleave="hideTip()">3</button>
+            <button class="score-btn" onclick="setDetailScore('t',4,this)" onmouseenter="showTip(this,'t',4)" onmouseleave="hideTip()">4</button>
+            <button class="score-btn" onclick="setDetailScore('t',5,this)" onmouseenter="showTip(this,'t',5)" onmouseleave="hideTip()">5</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div class="gut-col-label u-color" style="margin-bottom:8px">U — Urgência (pela data)</div>
+        <div class="urgency-box">
+          <div class="urgency-toggle">
+            <button class="utoggle-btn active" id="uNoDateDet" onclick="setNoDateDetail()">Sem data</button>
+            <button class="utoggle-btn" id="uWithDateDet" onclick="setWithDateDetail()">Com data</button>
+          </div>
+          <div class="date-input-wrap" id="dateWrapDet">
+            <input type="date" class="date-input" id="dueDateDet" onchange="updateDateDetail()">
+          </div>
+          <div class="urgency-preview">U calculado: <span class="urgency-badge" id="uPreviewDet">1</span> <span id="uDescDet" style="font-style:italic">Sem data definida</span></div>
+        </div>
+      </div>
+
+      <label class="detail-section-label">Anotações</label>
+      <textarea class="detail-notes" id="detailNotes" placeholder="Adicione observações, contexto, links..."></textarea>
+
+      <label class="detail-section-label">Etapas <span class="steps-progress" id="stepsProgress"></span></label>
+      <div class="steps-list" id="stepsList"></div>
+      <div class="add-step-row">
+        <input class="add-step-input" id="newStepInput" type="text" placeholder="Nova etapa..." maxlength="80"
+          onkeydown="if(event.key==='Enter') addStep()">
+        <button class="add-step-btn" onclick="addStep()">+ Add</button>
+      </div>
+
+      <button class="detail-save" onclick="saveDetail()">Salvar alterações</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
