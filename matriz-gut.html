@@ -654,16 +654,15 @@ async function init() {
   const saved = localStorage.getItem('gut_tasks');
   if (saved !== null) {
     tasks = JSON.parse(saved);
-    if (scriptUrl) updateSyncUI(true);
-    renderTasks();
-  } else if (scriptUrl) {
-    updateSyncUI(true);
-    showToast('⏳ Recuperando tarefas da nuvem...');
-    const loaded = await loadFromSheets();
-    if (!loaded) tasks = [];
     renderTasks();
   } else {
     tasks = [];
+    renderTasks();
+  }
+  if (scriptUrl) {
+    updateSyncUI(true);
+    showToast('⏳ Sincronizando com a nuvem...');
+    await loadFromSheets();
     renderTasks();
   }
   initialLoad = false;
@@ -671,15 +670,15 @@ async function init() {
 
 async function loadFromSheets() {
   try {
-    const r = await fetch(scriptUrl);
+    const r = await fetch(scriptUrl + '?t=' + Date.now());
     const data = await r.json();
-    if (data.tasks && data.tasks.length > 0) {
+    if (data.tasks) {
       tasks = data.tasks;
       saveTasks();
-      showToast('✓ ' + tasks.length + ' tarefas recuperadas!');
+      showToast('✓ Sincronizado! ' + tasks.length + ' tarefa' + (tasks.length !== 1 ? 's' : ''));
       return true;
     }
-  } catch(e) { console.log('Load error:', e); }
+  } catch(e) { console.log('Erro ao ler Sheets:', e); showToast('⚠ Sem conexão — usando dados locais'); }
   return false;
 }
 
